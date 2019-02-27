@@ -1,0 +1,6 @@
+NODE_ENV=development
+MYSQL_USER=root
+MYSQL_PASS=123456789
+MYSQL_HOST=localhost
+MYSQL_PORT=6606
+MYSQL_DB=SubscriptionAsAService

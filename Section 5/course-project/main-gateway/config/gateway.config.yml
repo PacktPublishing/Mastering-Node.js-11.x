@@ -1,0 +1,38 @@
+http:
+  port: 8080
+apiEndpoints:
+  # see: http://www.express-gateway.io/docs/configuration/gateway.config.yml/apiEndpoints
+  plans-service:
+    host: "*"
+    paths: ["/api/plans/*", "/api/plans"]
+  subscriptions-service:
+    host: "*"
+    paths: ["/api/subscriptions/*", "/api/subscriptions"]
+serviceEndpoints:
+  # see: http://www.express-gateway.io/docs/configuration/gateway.config.yml/serviceEndpoints
+  plans-service-endpoint:
+    url: http://localhost:3001/
+  subscriptions-service-endpoint:
+    url: http://localhost:3002/
+policies:
+  - proxy
+pipelines:
+  # see: https://www.express-gateway.io/docs/configuration/gateway.config.yml/pipelines
+  plans-service-pipeline:
+    apiEndpoints:
+      - plans-service
+    policies:
+      - proxy:
+          action:
+            serviceEndpoint: plans-service-endpoint
+            changeOrigin: true # localhost:3001 -> localhost:8080
+            stripPath: true # localhost:8080/api/plans -> localhost:3001(/api/plans -> removed)
+  subscriptions-service-pipeline:
+    apiEndpoints:
+      - subscriptions-service
+    policies:
+      - proxy:
+          action:
+            serviceEndpoint: subscriptions-service-endpoint
+            changeOrigin: true # localhost:3002 -> localhost:8080
+            stripPath: true # localhost:8080/api/subscriptions -> localhost:3001(/api/subscriptions -> removed)
